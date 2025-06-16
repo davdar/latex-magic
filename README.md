@@ -50,3 +50,27 @@ This project has three things in it:
   property of "if it works locally then it will work on Overleaf".
   Note: Overleaf doesn't use this `Makefile` when it builds, it just calls
   `latexmk` which picks up the `latexmkrc` configuration file.
+
+# How to use it
+
+You could use this project as a starter template, or you could just move some
+of the feels into your own project and it should work fine.
+
+Files you would need to move:
+
+- `hooks/` (just the scripts you plan to use)
+- `py/` (just the scripts you plan to use)
+- `sed/` (if you want to use `sed` magic)
+- `latexmkrc`
+- `Makefile` (if you want to build locally, or if you're using `dblp` magic,
+  which requires local builds to populate the db cache)
+- `with_python_version.sh` (only if you're using the Makefile)
+
+And changes you would need to make to your project files:
+
+- Assuming you're using `biblatex` for citations...
+  - Add `\addbibresource{dblp.bib}` to your configuration (before
+    `\begin{document}`).
+- If you're using `natbib` or something else for citations...
+  - I haven't tested these to know if they work or not. It may work out of the
+    box, or it may require small tweaks to things to get it working.
