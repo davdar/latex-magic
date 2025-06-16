@@ -1,0 +1,30 @@
+\documentclass[12pt]{article}
+
+\usepackage[
+  style=numeric-comp,
+  sortcites,
+  doi=false,
+  isbn=false,
+  url=false,
+  eprint=false,
+  safeinputenc,
+  maxnames=32,
+  maxbibnames=32,
+]{biblatex}
+
+\addbibresource{dblp.bib}
+\addbibresource{bib/local.bib}
+
+\begin{document}
+
+\section{Section}
+
+A citation from dblp~\cite{DBLP:journals/pacmpl/MoellerJBDSSFS24} and one from
+the local bib~\cite{hopcroft-karp}.
+
+\printbibliography
+
+\end{document}
+
+
+

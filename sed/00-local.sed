@@ -1,0 +1,2 @@
+s/⋅/\\mathrel{\\cdotp}/g
+
