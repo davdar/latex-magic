@@ -1,3 +1,17 @@
+This project has three things in it:
+
+- Some general infrastructure for running arbitrary script files before and
+  after latex builds, called "hooks". Things are set up so that you can run
+  builds locally with the `Makefile`, and also push them to `Overleaf` and
+  things also "just work" when built there. See small caveat in discussion
+  below on `py/magic_dblp.py` regarding Overleaf's sandbox and its inability to
+  fetch data from the web during builds.
+
+- `py/magic_dblp.py`: a "hook" that automagically grabs bib entries from dblp.org.
+
+- `py/magic_sed.py`: a "hook" `*.tex` files to replace unicode characters and
+  unicode markup shorthands with latex commands.
+
 # How it Works
 
 - The `latexmkrc` file is a copy of the one Overleaf uses, instrumented to call
@@ -21,4 +35,18 @@
     on the Overleaf side just fine.
 
 - The `py/magic_sed.py` script looks for sed scripts in `sed/` and applies all
-  of them to all of the `*.tex` files before they are processed by latex.
+  of them to all of the `*.tex` files before they are processed by latex. The
+  processing is done in-place, and assumes the build is happening in a staged
+  folder that has copies of all of the original files. (Which the `Makefile`
+  sets up—see next bullet.)
+
+- The `Makefile` drives `latexmk` by first copying everything into a `stage`
+  directory, and then running the build locally from there. This is also what
+  Overleaf does as they perform every build of the document in a local sandbox.
+
+- The `with_python_version.sh` script is only used by the `Makefile` and
+  attempts to run the build in an environment that pins the Python version. The
+  version is selected to match the one used on Overleaf to maximize the
+  property of "if it works locally then it will work on Overleaf".
+  Note: Overleaf doesn't use this `Makefile` when it builds, it just calls
+  `latexmk` which picks up the `latexmkrc` configuration file.
