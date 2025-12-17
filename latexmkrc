@@ -48,7 +48,7 @@ sub overleaf_pre_process {
     @fs = `find * -type d -path "hooks/pre_process" -exec find {} -name "*.py" \\;`;
     for my $f (@fs) {
       print("RUNNING PYTHON: $f");
-      system("time sh with_python_version.sh $python_version $python_cmd $f");
+      system("time sh sh/with_python_version.sh $python_version $python_cmd $f");
     }
 
     my $source_file = $_[0];
@@ -64,7 +64,7 @@ sub overleaf_post_process {
     @fs = `find * -type d -path "hooks/post_process" -exec find {} -name "*.py" \\;`;
     for my $f (@fs) {
       print("RUNNING PYTHON: $f");
-      system("time sh with_python_version.sh $python_version $python_cmd $f");
+      system("time sh sh/with_python_version.sh $python_version $python_cmd $f");
     }
 
     my $source_file = $_[0];

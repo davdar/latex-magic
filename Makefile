@@ -8,7 +8,7 @@ PYENV_VERSION := 3.10.6
 main:
 	rsync --archive --exclude=stage . stage
 	cd stage && \
-		sh with_python_version.sh $(PYENV_VERSION) \
+		sh sh/with_python_version.sh $(PYENV_VERSION) \
 		latexmk -pdflatex -halt-on-error -interaction=nonstopmode $(TEX_MAIN)
 	cp stage/dblp_db ./
 	cp stage/$(TEX_MAIN).pdf $(PRJ_NAME).pdf
@@ -17,7 +17,7 @@ main:
 lax:
 	rsync --archive --exclude=stage . stage
 	cd stage && \
-		sh with_python_version.sh $(PYENV_VERSION) \
+		sh sh/with_python_version.sh $(PYENV_VERSION) \
 		latexmk -pdflatex -halt-on-error -interaction=nonstopmode -f $(TEX_MAIN)
 	cp stage/dblp_db ./
 	cp stage/$(TEX_MAIN).pdf $(PRJ_NAME).pdf
