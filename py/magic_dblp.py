@@ -1,3 +1,7 @@
+# /// script
+# requires-python = ">=3.14"
+# ///
+
 import argparse
 import subprocess
 import os

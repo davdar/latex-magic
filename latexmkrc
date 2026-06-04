@@ -22,33 +22,14 @@ $bibtex_use = 2;
 
 my $ORIG_PDF_AGE;
 
-# ⇨ NEW ⇦
-# Use `python3` if it exists, otherwise use `python`
-# ⇩⇩⇩⇩⇩⇩⇩
-my $python3_exists = (system "(command -v python3 && python3 --version) >/dev/null 2>&1") == 0;
-my $python_exists  = (system "(command -v python  && python  --version) >/dev/null 2>&1") == 0;
-
-my $python_cmd;
-
-if ($python3_exists) {
-  $python_cmd = "python3";
-} elsif ($python_exists) {
-  $python_cmd = "python";
-} else {
-  print("ERROR: python is required; cannot continue.");
-  exit(1);
-}
-
-my $python_version = "3.10.6";
-# ⇧⇧⇧⇧⇧⇧⇧
-
 sub overleaf_pre_process {
     # ⇨ NEW ⇦
+    print("LOOKING FOR PRE PROCESS HOOKS\n");
     # Run all python scripts in hooks/pre_process/
     @fs = `find * -type d -path "hooks/pre_process" -exec find {} -name "*.py" \\;`;
     for my $f (@fs) {
       print("RUNNING PYTHON: $f");
-      system("time sh sh/with_python_version.sh $python_version $python_cmd $f");
+      system("time uv run $f");
     }
 
     my $source_file = $_[0];
@@ -60,11 +41,12 @@ sub overleaf_pre_process {
 
 sub overleaf_post_process {
     # ⇨ NEW ⇦
+    print("LOOKING FOR POST PROCESS HOOKS\n");
     # Run all python scripts in hooks/post_process/
     @fs = `find * -type d -path "hooks/post_process" -exec find {} -name "*.py" \\;`;
     for my $f (@fs) {
       print("RUNNING PYTHON: $f");
-      system("time sh sh/with_python_version.sh $python_version $python_cmd $f");
+      system("time uv run $f");
     }
 
     my $source_file = $_[0];
