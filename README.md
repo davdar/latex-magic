@@ -16,7 +16,7 @@ This project has three things in it:
 
 - The `latexmkrc` file is a copy of the one Overleaf uses, instrumented to call
   all of the python scripts in `hooks/{post_process,pre_process}` after and
-  before the main latex build.
+  before (respectively) the main latex build.
 
 - The `py/magic_dblp.py` script looks for strings of the form `DBLP:<id>`, and
   where `<id>` is of the form `*/*/*`. 
