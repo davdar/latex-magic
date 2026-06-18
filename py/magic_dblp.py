@@ -109,7 +109,7 @@ def main():
     if args.debug:   print(f"DEBUG: args={args}")
     if args.version: print(f"dblp.py: version {__VERSION__}")
 
-    curl_command = "curl -s -L"
+    curl_command = "curl -s -L -f"
     wget_command = "wget -q -O -"
 
     fetch_url_command = None
@@ -271,8 +271,8 @@ def main():
                 except:
                     print(f"→→→→ ERROR: Fetching url via `{fetch_url_command}` failed.")
                     sys.stdout.flush()
-                    before_exit(args)
-                    exit(1)
+                    # before_exit(args)
+                    # exit(1)
 
     # save the updated db
     with open(args.db_file, "wb") as f:
