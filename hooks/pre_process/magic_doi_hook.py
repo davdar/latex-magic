@@ -5,8 +5,8 @@
 import subprocess
 
 if __name__ == "__main__": 
-    print("⇒⇒⇒⇒ MAGIC SED HOOK START")
+    print("⇒⇒⇒⇒ MAGIC DOI HOOK START")
 
     subprocess.run("uv run py/magic_doi.py", shell=True)
 
-    print("⇒⇒⇒⇒ MAGIC SED HOOK END")
+    print("⇒⇒⇒⇒ MAGIC DOI HOOK END")

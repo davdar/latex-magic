@@ -5,7 +5,7 @@
 import subprocess
 
 if __name__ == "__main__": 
-    print("⇒⇒⇒⇒ MAGIC SED HOOK START")
+    print("⇒⇒⇒⇒ MAGIC JINJA HOOK START")
 
     subprocess.run(
             " ".join([
@@ -16,5 +16,5 @@ if __name__ == "__main__":
                 "--angle-delimiters"]), 
             shell=True)
 
-    print("⇒⇒⇒⇒ MAGIC SED HOOK END")
+    print("⇒⇒⇒⇒ MAGIC JINJA HOOK END")
 
