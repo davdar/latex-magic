@@ -108,7 +108,7 @@ def main():
 
     for fn in filenames:
         s = Path(fn).read_text()
-        dois = re.findall(r"DOI:(10\.\d+/[\w\d\-.]+)", s)
+        dois = re.findall(r"DOI:(10\.\d+/[\w\d\-./]+)", s)
         needed_keys |= set(dois)
     
     l.log(f"DOI KEYS FOUND: {len(needed_keys)}")
