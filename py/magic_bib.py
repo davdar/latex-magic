@@ -167,8 +167,6 @@ def main():
     Path(args.bib_file).parent.mkdir(parents=True, exist_ok=True)
     with open(args.bib_file, "w") as f:
         for idx, values in sorted(db.items()):
-            print(f"idx: {idx}")
-            print(f"values: {values}")
             for key, value in sorted(values.items()):
                 f.write(value)
                 f.write("\n")
