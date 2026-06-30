@@ -26,10 +26,10 @@ sub overleaf_pre_process {
     # ⇨ NEW ⇦
     print("LOOKING FOR PRE PROCESS HOOKS\n");
     # Run all python scripts in hooks/pre_process/
-    @fs = `find * -type d -path "hooks/pre_process" -exec find {} -name "*.py" \\; | sort`;
+    @fs = `find * -type d -path "hooks/pre_process" -exec find {} -name "*.bash" \\; | sort`;
     for my $f (@fs) {
-      print("RUNNING PYTHON: $f");
-      system("time uv run $f");
+      print("RUNNING SCRIPT: $f");
+      system("bash $f");
     }
 
     my $source_file = $_[0];
@@ -43,10 +43,10 @@ sub overleaf_post_process {
     # ⇨ NEW ⇦
     print("LOOKING FOR POST PROCESS HOOKS\n");
     # Run all python scripts in hooks/post_process/
-    @fs = `find * -type d -path "hooks/post_process" -exec find {} -name "*.py" \\; | sort`;
+    @fs = `find * -type d -path "hooks/post_process" -exec find {} -name "*.bash" \\; | sort`;
     for my $f (@fs) {
-      print("RUNNING PYTHON: $f");
-      system("time uv run $f");
+      print("RUNNING SCRIPT: $f");
+      system("bash $f");
     }
 
     my $source_file = $_[0];
