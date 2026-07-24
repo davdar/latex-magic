@@ -77,8 +77,9 @@ def main():
     l.log(f"TOML FILES: {", ".join(toml_filenames)}")
     l.log(f"TMPL FILES: {", ".join(tmpl_filenames)}")
 
-    toml_data_s = "".join([Path(fn).read_text() for fn in toml_filenames])
-    toml_data = tomllib.loads(toml_data_s)
+    toml_data = {}
+    for fn in toml_filenames:
+        toml_data |= tomllib.loads(Path(fn).read_text())
 
     d.log(2, f"toml_data={toml_data}")
 
