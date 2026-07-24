@@ -2,12 +2,14 @@
 # requires-python = ">=3.14"
 # dependencies = [
 #   "jinja2",
+#   "deepmerge",
 # ]
 # ///
 
 from pathlib import Path
 import argparse
 import tomllib
+from deepmerge import always_merger
 
 import jinja2
 
@@ -79,7 +81,7 @@ def main():
 
     toml_data = {}
     for fn in toml_filenames:
-        toml_data |= tomllib.loads(Path(fn).read_text())
+        always_merger.merge(toml_data, tomllib.loads(Path(fn).read_text()))
 
     d.log(2, f"toml_data={toml_data}")
 
