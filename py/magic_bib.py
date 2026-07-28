@@ -132,8 +132,9 @@ def main():
         # Extend the db by fetching new db entries
     
         for k in new_keys:
+            k_processed = k.translate(str.maketrans({"[": "(", "]": ")"}))
             try:
-                v = fetch(k)
+                v = fetch(k_processed)
                 bibtex = bibtexparser.parse_string(v)
                 bibtex.entries[0].key = f"{idx}:{k}"
                 db[idx][k] = bibtexparser.write_string(
@@ -147,7 +148,7 @@ def main():
     def fetch_doi(k):
         l.log(f"FETCHING: https://doi.org/{k}")
         response = requests.get(
-                f"https://doi.org/{k}", 
+                f"https://doi.org/{k}",
                 headers={"Accept": "application/x-bibtex"})
         response.raise_for_status()
         return response.text.strip()
@@ -159,7 +160,7 @@ def main():
         response.raise_for_status()
         return BeautifulSoup(response.text, "html.parser").find("code", id="bibtex").text
 
-    process("DOI", r"DOI:(10\.\d+/[\w\d\-./]+)", fetch_doi)
+    process("DOI", r"DOI:(10\.\d+/[\w\d\-./\[\]]+)", fetch_doi)
     process("MLR", r"MLR:([\w\d\-./]+)", fetch_mlr)
 
     l.log(f"WRITING BIB FILE")
