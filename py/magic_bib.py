@@ -132,7 +132,7 @@ def main():
         # Extend the db by fetching new db entries
     
         for k in new_keys:
-            k_processed = k.translate(str.maketrans({"[": "(", "]": ")"}))
+            k_processed = k.translate(str.maketrans({"<": "(", ">": ")"}))
             try:
                 v = fetch(k_processed)
                 bibtex = bibtexparser.parse_string(v)
@@ -144,6 +144,7 @@ def main():
                         ])
             except requests.HTTPError as e:
                 print(f"Fetching uri failed: {k}")
+                print(e)
 
     def fetch_doi(k):
         l.log(f"FETCHING: https://doi.org/{k}")
@@ -160,7 +161,7 @@ def main():
         response.raise_for_status()
         return BeautifulSoup(response.text, "html.parser").find("code", id="bibtex").text
 
-    process("DOI", r"DOI:(10\.\d+/[\w\d\-./\[\]]+)", fetch_doi)
+    process("DOI", r"DOI:(10\.\d+/[\w\d\-./<>]+)", fetch_doi)
     process("MLR", r"MLR:([\w\d\-./]+)", fetch_mlr)
 
     l.log(f"WRITING BIB FILE")
