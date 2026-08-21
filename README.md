@@ -1,62 +1,35 @@
-This project has three things in it:
+This project has a few things in it:
 
-- Some general infrastructure for running arbitrary script files before and
-  after latex builds, called "hooks". Things are set up so that you can run
-  builds locally with the `Makefile`, and also push them to `Overleaf` and
-  things also "just work" when built there. See small caveat in discussion below
-  on `py/magic_bib.py` regarding Overleaf's sandbox and its inability to fetch
-  data from the web during builds.
+- `py/magic_jinja.py`: A Python script that processes a bunch of files
+  as Jinja2 templates, using a bunch of TOML files as the data object.
 
-- `py/magic_bib.py`: automatically grab bib entries for any DOI.
+- `py/magic_bib.py`: A Python script that automatically fetches bibtex info for
+  dois and automatically grab bib entries for any DOI or MLR uri, caches them in
+  a database file, and automatically builds bibtex files.
 
-- `py/magic_jinja.py`: automatically apply jinja templates.
+- `hooks/*`: Bash wrappers around the python scripts that specialize them
+  somewhat (via command line flag options) to building latex documents. (E.g.,
+  Jinja2 templates are configured to process files in place and use `<< X >>`,
+  `<@ X @>` and `<# X #>` instead of `{{ X }}`, `{% X %}` and `{# X #}`.)
 
-# How it Works
+- `latexmkrc`: A copy of Overleaf's default `latexmkrc` that calls all scripts
+  in `hooks/pre_process` before each call to `pdflatex`, likewise for
+  `hooks/post_process` after each call to `pdflatex`.
 
-- The `latexmkrc` file is a copy of the one Overleaf uses, instrumented to call
-  all of the python scripts in `hooks/{post_process,pre_process}` after and
-  before (respectively) the main latex build, in lexicographic order of the
-  script filenames.
+- `latex/`: An example latex project directory that uses the python scripts and
+  hooks (via `latexmkrc`) to do automatic bib fetching and Jinja2 templating.
 
-- The `py/bib.py` script looks for strings of the form `DOI:<doi>`, and
-  where `<doi>` is a valid DOI identifier.
-  - Bib entries for these citations are automatically fetched from doi.org.
-  - Bib entries are cached when fetched and reused across builds. The default
-    cache file is `bib/bib_db`.
-  - When using Overleaf, the Overleaf build sandbox won't allow fetching data
-    from the internet. But you can easily just build locally, populate the
-    `bib_db` cache file, push to Overleaf, and then the magic will happen
-    on the Overleaf side just fine.
+- `latex/Makefile`: A generic Makefile that assumes a project structure of:
+  ```
+  - common/{bib,data,hooks/py,tex}
+  - variants/VAR1/{bib,data,hooks/py,tex}
+  - variants/VAR2/{bib,data,hooks/py,tex}
+  ```
+  The idea is that we are separating the build into explicit variants (e.g.,
+  draft, submit, redacted). Stuff that is common to every variant goes in
+  `common`, and stuff specific to variant `VAR1` goes in `variants/VAR1`. When
+  building, the Makefile will union the contents of a variant's folder with
+  common before building, and it will also set a flag `\isVAR1` that is
+  accessible in latex, so you know what variant you are building, e.g., for
+  placing logic in `common` that is still variant-specific.
 
-- The `py/magic_jinja.py` is configurable to concatenate a bunch of toml files
-  and use those as the data object to instantiate a bunch of jinja template
-  files.
-
-- The `Makefile` drives `latexmk` by first copying everything into a `stage`
-  directory, and then running the build locally from there. This is also what
-  Overleaf does as they perform every build of the document in a local sandbox.
-
-- The scripts use `uv` to run Python scripts with dependencies declared in
-  comments at the top of the file.
-
-# How to use it
-
-You could use this project as a starter template, or you could just move some
-of the feels into your own project and it should work fine.
-
-Files you would need to move:
-
-- `hooks/` (just the scripts you plan to use)
-- `py/` (just the scripts you plan to use)
-- `latexmkrc`
-- `Makefile` (if you want to build locally, or if you're using `dblp` magic,
-  which requires local builds to populate the db cache)
-
-And changes you would need to make to your project files:
-
-- Assuming you're using `biblatex` for citations...
-  - Add `\addbibresource{bib/magic.bib}` to your configuration (before
-    `\begin{document}`).
-- If you're using `natbib` or something else for citations...
-  - I haven't tested these to know if they work or not. It may work out of the
-    box, or it may require small tweaks to things to get it working.
