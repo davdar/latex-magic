@@ -115,6 +115,3 @@ versions:
 	pdflatex --version
 	latexmk --version
 	uv --version
-	pandoc --version
-	docx2pdf --version
-
