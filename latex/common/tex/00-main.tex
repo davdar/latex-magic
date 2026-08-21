@@ -1,0 +1,29 @@
+\documentclass{article}
+
+\usepackage{biblatex}
+\usepackage{parskip}
+
+\addbibresource{bib/magic.bib}
+\addbibresource{bib/local.bib}
+
+\begin{document}
+
+\section{Section}
+
+A citation from DOI~\cite{DOI:10.1145/3360598}, from
+MLR~\cite{MLR:v267/park25l} and one from the local bib~\cite{hopcroft-karp}.
+
+You can also use jinja for citation aliases, defined in
+\texttt{bib/aliases.toml}~\cite{<<Duet>>}.
+
+Here is a jinja template that pulls data from \texttt{data/data.toml}...
+
+\begin{tabular}{|c|}\hline
+<@ for x in xs @>
+<< x >> \\\hline
+<@ endfor @>
+\end{tabular}
+
+\printbibliography
+
+\end{document}
