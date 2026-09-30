@@ -38,6 +38,10 @@ This project has a few things in it:
   `<var>`:
   - `/out/<var>/bib/magic.bib`
 
+  Bib entries are fetched from online and cached in a local database located
+  here:
+  - `/latex/common/bib/bib_db`
+
 - `hooks/*`: Bash wrappers around the python scripts that specialize them
   somewhat (via command line flag options) to building latex documents. (E.g.,
   Jinja2 templates are configured to process files in place and use `<< X >>`,
