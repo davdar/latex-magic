@@ -1,11 +1,42 @@
+# Requirements
+
+- `pdflatex` and `mklatex`
+- `python` and `uv`
+
+# What's Inside
+
 This project has a few things in it:
 
 - `py/magic_jinja.py`: A Python script that processes a bunch of files
   as Jinja2 templates, using a bunch of TOML files as the data object.
 
+  By default, a single database is built from all toml files that match these
+  paths:
+  - `/latex/common/data/*.toml`
+  - `/latex/common/bib/*.toml`
+  - `/latex/variants/*/data/*.toml`
+  - `/latex/variants/*/bib/*.toml`
+  (The `**/bib/*.toml` paths are useful for making `toml` files that define
+  citation aliases.)
+
+  By default, all of these files are processed with Jinja2 templating:
+  - `/latex/common/tex/**/*.tex`
+  - `/latex/variants/*/tex/**/*.tex`
+
+  These defaults are configurable by tweaking the command arguments inside
+  `latex/common/hooks/pre_process/01_jinja.bash`.
+
 - `py/magic_bib.py`: A Python script that automatically fetches bibtex info for
   dois and automatically grab bib entries for any DOI or MLR uri, caches them in
   a database file, and automatically builds bibtex files.
+
+  Be default, the following files are searched for DOI URIs, which look like
+  `DOI:10.1145/3360598`:
+  - `/latex/common/tex/*.tex`
+
+  A bib file is then build, and output to this file when building variant
+  `<var>`:
+  - `/out/<var>/bib/magic.bib`
 
 - `hooks/*`: Bash wrappers around the python scripts that specialize them
   somewhat (via command line flag options) to building latex documents. (E.g.,
@@ -32,4 +63,3 @@ This project has a few things in it:
   common before building, and it will also set a flag `\isVAR1` that is
   accessible in latex, so you know what variant you are building, e.g., for
   placing logic in `common` that is still variant-specific.
-
