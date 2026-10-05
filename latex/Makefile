@@ -5,8 +5,8 @@
 # $< = name of first prerequisite
 # $^ = names of all prerequisites
 
-include Makefile_Options
-include Makefile_Options_Local
+-include Makefile_Options
+-include Makefile_Options_Local
 
 OUTPUT_PREFIX ?= main
 RUN_LATEX ?= latexmk -pdflatex -shell-escape -halt-on-error -interaction=nonstopmode

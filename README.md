@@ -1,6 +1,6 @@
 # Requirements
 
-- `pdflatex` and `mklatex`
+- `pdflatex` and `latexmk`
 - `python` and `uv`
 
 # What's Inside
