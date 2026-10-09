@@ -6,6 +6,31 @@
 \addbibresource{bib/magic.bib}
 \addbibresource{bib/local.bib}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Variant-dependent Config and Macros %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Fancy \byvariant macro
+\ExplSyntaxOn
+\msg_new:nnn { byvariant } { unhandled } { Unhandled~variant:~#1 }
+\NewExpandableDocumentCommand{\byvariant}{o+m}
+  {
+    \str_case_e:nnF { \variant } {#2}
+      {
+        \tl_if_novalue:nTF {#1}
+          { \exp_args:NnnV \msg_expandable_error:nnn { byvariant } { unhandled } \variant }
+          {#1}
+      }
+  }
+\ExplSyntaxOff
+
+\newcommand{\prompt}[1]{%
+  \byvariant{
+    {draft}{{\color{RoyalBlue}#1}}
+    {final}{}
+  }%
+}
+
 \begin{document}
 
 \section{Section}

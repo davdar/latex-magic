@@ -51,7 +51,7 @@ OUT_FILES_$1 ?= \
 	$$(patsubst variants/$1/%,out/$1/%, \
 	$$(SRC_FILES_$1)))
 
-PRETEX_$1 ?= "\\def\\isVariant$1{}"
+PRETEX_$1 ?= "\\def\\variant{$1}"
 
 OUTPUT_PREFIX_$1 ?= $$(OUTPUT_PREFIX)
 OUTPUT_SUFFIX_$1 ?= _$1
