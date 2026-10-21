@@ -63,11 +63,11 @@ DATA_FILES_$1 = \
 	$(wildcard variants/$1/data/*.toml) \
 	$(wildcard variants/$1/bib/*.toml) \
 
-out/$1/%: common/% $$(DATA_FILES_$1)
+out/$1/%: variants/$1/% $$(DATA_FILES_$1)
 	mkdir -p $$(@D)
 	cp -r $$< $$@
 
-out/$1/%: variants/$1/% $$(DATA_FILES_$1)
+out/$1/%: common/% $$(DATA_FILES_$1)
 	mkdir -p $$(@D)
 	cp -r $$< $$@
 
