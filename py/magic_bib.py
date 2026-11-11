@@ -22,6 +22,15 @@ from magic_helpers import *
 
 __VERSION__ = "0.0.0.1"
 
+# Unicode single quotes and primes that DOI/MLR metadata uses, mapped to ASCII '.
+# pdflatex has no definition for U+2032 PRIME (e.g. "ICFP′15") and stops with
+# "Unicode character not set up for use with LaTeX".
+UNICODE_QUOTES_TO_ASCII = str.maketrans({
+    "\u2018": "'",  # ‘ LEFT SINGLE QUOTATION MARK
+    "\u2019": "'",  # ’ RIGHT SINGLE QUOTATION MARK
+    "\u2032": "'",  # ′ PRIME
+})
+
 def process_command_line_arguments():
     ap = argparse.ArgumentParser(description=" ".join([ 
         "Automatically download bibtex entries",
@@ -65,6 +74,10 @@ def process_command_line_arguments():
         "--clean-cache",
         action="store_true",
         help="Do not read (but still write) to the BIB DB cache.")
+    ap.add_argument(
+        "--allow-unicode-bib",
+        action="store_true",
+        help="Write bib entries as fetched, without replacing Unicode single quotes and primes with ASCII '.")
     return ap.parse_args()
 
 
@@ -170,6 +183,8 @@ def main():
     with open(args.bib_file, "w") as f:
         for idx, values in sorted(db.items()):
             for key, value in sorted(values.items()):
+                if not args.allow_unicode_bib:
+                    value = value.translate(UNICODE_QUOTES_TO_ASCII)
                 f.write(value)
                 f.write("\n")
 
