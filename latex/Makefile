@@ -14,6 +14,11 @@ VARIANTS ?= $(patsubst variants/%,%,$(wildcard variants/*))
 ALL_TARGETS ?= $(VARIANTS)
 MAIN_TARGETS ?= $(ALL_TARGETS)
 
+UNAME := $(shell uname -s)
+CPR.Darwin := cp -r
+CPR.Linux := cp -RL
+CPR := $(or $(CPR.$(UNAME)),$(error Unsupported OS: $(UNAME)))
+
 .PHONY: main
 main: $(MAIN_TARGETS)
 
@@ -65,11 +70,11 @@ DATA_FILES_$1 = \
 
 out/$1/%: variants/$1/% $$(DATA_FILES_$1)
 	mkdir -p $$(@D)
-	cp -r $$< $$@
+	$(CPR) $$< $$@
 
 out/$1/%: common/% $$(DATA_FILES_$1)
 	mkdir -p $$(@D)
-	cp -r $$< $$@
+	$(CPR) $$< $$@
 
 out/$1/bib/bib_db: common/bib/bib_db
 	mkdir -p $$(@D)
