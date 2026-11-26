@@ -65,11 +65,13 @@ DATA_FILES_$1 = \
 
 out/$1/%: variants/$1/% $$(DATA_FILES_$1)
 	mkdir -p $$(@D)
-	cp -r $$< $$@
+	rm -rf $$@
+	cp -RL $$< $$@
 
 out/$1/%: common/% $$(DATA_FILES_$1)
 	mkdir -p $$(@D)
-	cp -r $$< $$@
+	rm -rf $$@
+	cp -RL $$< $$@
 
 out/$1/bib/bib_db: common/bib/bib_db
 	mkdir -p $$(@D)
@@ -110,7 +112,7 @@ clean:
 	rm -rf out
 	rm -f $(foreach v,$(VARIANTS),$(OUTPUT_$v))
 
-.PHONY: version
+.PHONY: versions
 versions:
 	pdflatex --version
 	latexmk --version
