@@ -20,8 +20,6 @@ $go_mode = 3;
 # out of date.
 $bibtex_use = 2;
 
-my $ORIG_PDF_AGE;
-
 sub overleaf_pre_process {
     # ⇨ NEW ⇦
     print("LOOKING FOR PRE PROCESS HOOKS\n");
@@ -31,12 +29,6 @@ sub overleaf_pre_process {
       print("RUNNING SCRIPT: $f");
       system("bash $f");
     }
-
-    my $source_file = $_[0];
-    my $output_file = $_[1];
-
-    # get age of existing pdf if present
-    $ORIG_PDF_AGE = -M $output_file
 }
 
 sub overleaf_post_process {
@@ -60,36 +52,6 @@ sub overleaf_post_process {
         print "Patching synctex file for knitr...\n";
         system("patchSynctex.R", $source_without_ext, $output_without_ext);
     }
-
-    # Return early if pdf file doesn't exist or wasn't updated
-    my $NEW_PDF_AGE = -M $output_file;
-    return if !defined($NEW_PDF_AGE);
-    return if defined($ORIG_PDF_AGE) && $NEW_PDF_AGE == $ORIG_PDF_AGE;
-
-    # Figure out where qpdf is
-    $qpdf //= "/usr/bin/qpdf";
-    $qpdf = $ENV{QPDF} if defined($ENV{QPDF}) && -x $ENV{QPDF};
-    return if ! -x $qpdf;
-    $qpdf_opts //= "--linearize --newline-before-endstream";
-    $qpdf_opts = $ENV{QPDF_OPTS} if defined($ENV{QPDF_OPTS});
-
-    # Run qpdf
-    my $optimised_file = "${output_file}.opt";
-    system($qpdf, split(' ', $qpdf_opts), $output_file, $optimised_file);
-    $qpdf_exit_code = ($? >> 8);
-    print "qpdf exit code=$qpdf_exit_code\n";
-
-    # Replace the output file if qpdf was successful
-    # qpdf returns 0 for success, 3 for warnings (output pdf still created)
-    return if !($qpdf_exit_code == 0 || $qpdf_exit_code == 3);
-    print "Renaming optimised file to $output_file\n";
-    rename($optimised_file, $output_file);
-
-    print "Extracting xref table for $output_file\n";
-    my $xref_file = "${output_file}xref";
-    system("$qpdf --show-xref ${output_file} > ${xref_file}");
-    $qpdf_xref_exit_code = ($? >> 8);
-    print "qpdf --show-xref exit code=$qpdf_xref_exit_code\n";
 }
 
 ##############
