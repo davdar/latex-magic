@@ -34,14 +34,14 @@ SRC_FILES_$1 ?= \
 	$(wildcard common/bib/*) \
 	$(wildcard common/data/*) \
 	$(wildcard common/fonts/*) \
-	$(wildcard common/hooks/*) \
+	$(shell find -L common/hooks -type f ! -name '.*' 2>/dev/null) \
 	$(wildcard common/images/*) \
 	$(wildcard common/py/*) \
 	$(wildcard common/tex/*) \
 	$(wildcard variants/$1/bib/*) \
 	$(wildcard variants/$1/data/*) \
 	$(wildcard variants/$1/fonts/*) \
-	$(wildcard variants/$1/hooks/*) \
+	$(shell find -L variants/$1/hooks -type f ! -name '.*' 2>/dev/null) \
 	$(wildcard variants/$1/images/*) \
 	$(wildcard variants/$1/py/*) \
 	$(wildcard variants/$1/tex/*)
@@ -51,7 +51,7 @@ OUT_FILES_$1 ?= \
 	$$(patsubst variants/$1/%,out/$1/%, \
 	$$(SRC_FILES_$1)))
 
-PRETEX_$1 ?= "\\def\\variant{$1}"
+PRETEX_$1 ?= \def\variant{$1}
 
 OUTPUT_PREFIX_$1 ?= $$(OUTPUT_PREFIX)
 OUTPUT_SUFFIX_$1 ?= _$1
@@ -75,10 +75,10 @@ out/$1/%: common/% $$(DATA_FILES_$1)
 
 out/$1/bib/bib_db: common/bib/bib_db
 	mkdir -p $$(@D)
-	cd out/$1/bib && ln -s ../../../common/bib/bib_db
+	ln -sfn ../../../common/bib/bib_db $$@
 
 out/$1/main.pdf: $$(OUT_FILES_$1)
-	cd $$(@D) && $$(RUN_LATEX) -usepretex="$$(PRETEX_$1)" main.tex
+	cd $$(@D) && $$(RUN_LATEX) -usepretex='$$(PRETEX_$1)' main.tex
 
 $$(OUTPUT_$1): out/$1/main.pdf
 	cp $$< $$@
